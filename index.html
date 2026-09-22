@@ -386,7 +386,7 @@ class Game{
   T('Kelvin Cárdenas',W/2,H-14,11,'#9fd0ff','center')}
  screens(){const s=this.state,bl=Math.sin(this.time*5)>0;
   if(s==='menu'){c.fillStyle='rgba(0,0,15,.45)';c.fillRect(0,0,W,H);{const pw=1+(Math.floor(this.time/1.4)%5),pi=Math.floor(this.time/2.8)%PIL.length;if(!this.pv)this.pv=new Player(0);this.pv.pl=PIL[pi];this.pv.i=pi;this.preview(W/2,H*.6+Math.sin(this.time*2)*8,1.7,pw);T(PIL[pi].n+' · '+WN[pw-1],W/2,H*.7,16,'#ffe27a','center')}
-   T('KELVIN',W/2,165,72,'#ffd23d','center');T('SKY ACE',W/2,228,40,'#fff','center');T('Un juego de Kelvin Cárdenas',W/2,268,15,'#9fd0ff','center');if(bl)T('PULSA ENTER O TOCA PARA JUGAR',W/2,H*.8,17,'#fff','center');
+   T('KCP',W/2,165,72,'#ffd23d','center');T('SKY KEL',W/2,228,40,'#fff','center');T('Un juego de Kelvin Cárdenas',W/2,268,15,'#9fd0ff','center');if(bl)T('PULSA ENTER O TOCA PARA JUGAR',W/2,H*.8,17,'#fff','center');
    T('← → ↑ ↓ mover · ESPACIO disparar · Z ulti · P pausa',W/2,H*.86,13,'#cde','center');T('⭐ RÉCORD: '+this.best,W/2,H*.92,15,'#fff','center')}
   if(s==='pause'){c.fillStyle='rgba(0,0,15,.7)';c.fillRect(0,0,W,H);T('PAUSA',W/2,190,52,'#fff','center');T(this.p.pl.n+' · NIVEL '+(this.lv+1),W/2,240,18,this.p.pl.col,'center');this.drawBtns();T('P continuar · R reiniciar · C cambiar avión',W/2,H-60,12,'#cde','center')}
   if(s==='over'){c.fillStyle='rgba(20,0,0,.6)';c.fillRect(0,0,W,H);T('GAME OVER',W/2,H/2-60,52,'#ff4b4b','center');T('PUNTOS: '+this.score,W/2,H/2,24,'#fff','center');T('RÉCORD: '+this.best,W/2,H/2+34,18,'#ffd23d','center');if(this.lock<=0)this.drawBtns()}
