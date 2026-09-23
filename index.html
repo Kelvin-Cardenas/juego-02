@@ -510,3 +510,4 @@ addEventListener('resize',fit);fit();requestAnimationFrame(loop);
 cv.addEventListener('pointerdown',e=>{G.audio.init();const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;const st=G.state;if(st==='select'){if(y>H*.8)G.next();else G.pick(x<W/2?-1:1)}else if(st==='pause'||st==='over'||st==='win')G.tap(x,y);else if(st==='menu')G.next()});
 $('pb').addEventListener('pointerdown',()=>{if(G.state==='play')G.state='pause';else if(G.state==='pause')G.state='play'});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&G.state==='play')G.state='pause'});
+</script></body></html>
