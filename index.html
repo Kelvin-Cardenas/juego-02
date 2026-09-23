@@ -119,14 +119,12 @@ class InputManager{
 /* ---------- AUDIO ---------- */
 class AudioManager{
  constructor(){this.a=null;this.unlocked=false;this.mAcc=0;this.mI=0}
- init(){if(!this.a){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;this.a=new AC()}catch(e){console.error('No se pudo crear AudioContext:',e);return}}
+ init(){if(!this.a){try{this.a=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}
   if(!this.a)return;
-  if(this.a.state==='suspended'||this.a.state==='interrupted'){this.a.resume().then(()=>{if(this.a.state==='running')this._unlock()}).catch(e=>console.warn('No se pudo reanudar audio:',e));return}
-  if(this.a.state!=='running')return;
-  this._unlock()}
- _unlock(){if(this.unlocked||!this.a||this.a.state!=='running')return;try{const b=this.a.createBuffer(1,1,this.a.sampleRate),s=this.a.createBufferSource();s.buffer=b;s.connect(this.a.destination);s.start(0);this.unlocked=true}catch(e){console.warn('No se pudo desbloquear audio:',e)}}
- tone(f,d,type='square',v=.05,sl=0,dl=0){const a=this.a;if(!a||a.state!=='running')return;const t=a.currentTime+dl,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(sl)o.frequency.exponentialRampToValueAtTime(Math.max(20,f+sl),t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d)}
- noise(d,v=.15,fr=800){const a=this.a;if(!a||a.state!=='running')return;const n=Math.max(1,a.sampleRate*d|0),b=a.createBuffer(1,n,a.sampleRate),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=(R()*2-1)*(1-i/n);const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=b;f.type='lowpass';f.frequency.value=fr;g.gain.value=v;s.connect(f);f.connect(g);g.connect(a.destination);s.start()}
+  if(this.a.state==='suspended')this.a.resume();
+  if(!this.unlocked){try{const b=this.a.createBuffer(1,1,22050),s=this.a.createBufferSource();s.buffer=b;s.connect(this.a.destination);s.start(0)}catch(e){}this.unlocked=true}}
+ tone(f,d,type='square',v=.05,sl=0,dl=0){const a=this.a;if(!a)return;const t=a.currentTime+dl,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(sl)o.frequency.exponentialRampToValueAtTime(Math.max(20,f+sl),t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d)}
+ noise(d,v=.15,fr=800){const a=this.a;if(!a)return;const n=a.sampleRate*d|0,b=a.createBuffer(1,n,a.sampleRate),x=b.getChannelData(0);for(let i=0;i<n;i++)x[i]=(R()*2-1)*(1-i/n);const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=b;f.type='lowpass';f.frequency.value=fr;g.gain.value=v;s.connect(f);f.connect(g);g.connect(a.destination);s.start()}
  suspense(lv){const S=[
   ()=>{[440,554,659,880].forEach((f,i)=>this.tone(f,.5,'triangle',.045,0,i*.5));this.noise(2.6,.05,1400)},
   ()=>{this.tone(70,2.6,'sawtooth',.09,0,0);for(let i=0;i<4;i++)this.tone(900,.06,'square',.05,-600,.5+i*.6);this.noise(2.6,.12,300)},
