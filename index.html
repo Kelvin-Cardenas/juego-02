@@ -14,7 +14,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none}
 @media(pointer:coarse){#js,#fb,#pb{display:block}}
 #js,#fb{bottom:calc(3% + env(safe-area-inset-bottom,0px));width:clamp(72px,28vw,30vh);aspect-ratio:1;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08)}
 #js{left:4%}
-#kn{position:absolute;left:50%;top:50%;width:40%;height:40%;margin:-20%;border-radius:50%;background:rgba(255,255,255,.4)}
+#kn{position:absolute;left:50%;top:50%;width:40%;height:40%;margin:-20%;border-radius:50%;background:rgba(255,255,255,.4);touch-action:none;pointer-events:none}
 #fb{right:4%;display:none;background:rgba(255,80,80,.25);border-color:rgba(255,120,120,.6);color:#fff;font:900 16px system-ui;align-items:center;justify-content:center}
 @media(pointer:coarse){#fb{display:flex}}
 #fb.on{background:rgba(255,80,80,.65)}
@@ -113,12 +113,12 @@ class InputManager{
   addEventListener('keyup',e=>this.k[e.code]=0);
   const js=$('js'),kn=$('kn');let id=null,ox=0,oy=0,mr=40;
   const mv=e=>{if(e.pointerId!==id)return;let dx=(e.clientX-ox)/mr,dy=(e.clientY-oy)/mr,m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m}this.jx=dx;this.jy=dy;kn.style.transform=`translate(${dx*mr}px,${dy*mr}px)`};
-  js.addEventListener('pointerdown',e=>{if(window.__ga)__ga();id=e.pointerId;this.tc=1;js.setPointerCapture(id);const r=js.getBoundingClientRect();ox=r.left+r.width/2;oy=r.top+r.height/2;mr=r.width*.35;mv(e)});
+  js.addEventListener('pointerdown',e=>{e.preventDefault();if(window.__ga)__ga();id=e.pointerId;this.tc=1;js.setPointerCapture(id);const r=js.getBoundingClientRect();ox=r.left+r.width/2;oy=r.top+r.height/2;mr=r.width*.35;mv(e)});
   js.addEventListener('pointermove',mv);
   const up=e=>{if(e.pointerId===id){id=null;this.tc=0;this.jx=this.jy=0;kn.style.transform=''}};
   js.addEventListener('pointerup',up);js.addEventListener('pointercancel',up);
-  const fb=$('fb');fb.addEventListener('pointerdown',()=>{if(window.__ga)__ga();this.fire=true;fb.classList.add('on')});
-  ['pointerup','pointercancel','pointerleave'].forEach(n=>fb.addEventListener(n,()=>{this.fire=false;fb.classList.remove('on')}));$('pw').addEventListener('pointerdown',()=>{if(window.__ga)__ga();this.pressed.KeyZ=1})}
+  const fb=$('fb');fb.addEventListener('pointerdown',e=>{e.preventDefault();if(window.__ga)__ga();this.fire=true;fb.classList.add('on')});
+  ['pointerup','pointercancel','pointerleave'].forEach(n=>fb.addEventListener(n,()=>{this.fire=false;fb.classList.remove('on')}));$('pw').addEventListener('pointerdown',e=>{e.preventDefault();if(window.__ga)__ga();this.pressed.KeyZ=1})}
  get ax(){const k=this.k;return clamp((k.ArrowRight||k.KeyD?1:0)-(k.ArrowLeft||k.KeyA?1:0)+this.jx,-1,1)}
  get ay(){const k=this.k;return clamp((k.ArrowDown||k.KeyS?1:0)-(k.ArrowUp||k.KeyW?1:0)+this.jy,-1,1)}
  get shoot(){return this.k.Space||this.fire||this.tc}
