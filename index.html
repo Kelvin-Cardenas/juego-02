@@ -6,8 +6,8 @@
 :root{--bg:#05070f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html,body{height:100%;margin:0;overscroll-behavior:none;-webkit-touch-callout:none;background:var(--bg);overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;font-family:system-ui,"Segoe UI",sans-serif}
 body{display:flex;align-items:center;justify-content:center}
-#w{position:relative;width:min(100vw,66.66vh);width:min(100vw,66.66dvh);max-height:100vh;max-height:100dvh;aspect-ratio:2/3;box-shadow:0 0 60px rgba(60,140,255,.25)}
-canvas{width:100%;height:100%;display:block}
+#w{position:relative;width:min(100vw,66.66vh);width:min(100vw,66.66dvh);max-height:100vh;max-height:100dvh;aspect-ratio:2/3;box-shadow:0 0 60px rgba(60,140,255,.25);touch-action:none}
+canvas{width:100%;height:100%;display:block;touch-action:none}
 @media(pointer:coarse) and (orientation:portrait){body{align-items:flex-start}}
 @media(orientation:landscape) and (max-height:480px){#js,#fb{width:clamp(56px,20vh,80px)}#pw{width:clamp(40px,14vh,56px);bottom:calc(3% + clamp(56px,20vh,80px) + 8px + env(safe-area-inset-bottom,0px))}#snd{width:clamp(30px,10vh,38px);height:clamp(30px,10vh,38px)}}
 #js,#fb,#pb{position:absolute;z-index:5;display:none;touch-action:none;-webkit-tap-highlight-color:transparent}
@@ -23,7 +23,7 @@ canvas{width:100%;height:100%;display:block}
 @media(pointer:coarse){#pw{display:flex}}
 body:not(.pl) #js,body:not(.pl) #fb,body:not(.pl) #pw,body:not(.pl) #pb{visibility:hidden}
 #pb{left:50%;bottom:calc(3% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:clamp(38px,9vw,48px);height:clamp(38px,9vw,48px);border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:18px}
-#snd{position:absolute;z-index:6;top:calc(3% + env(safe-area-inset-top,0px));right:calc(3% + env(safe-area-inset-right,0px));width:clamp(36px,8vw,44px);height:clamp(36px,8vw,44px);border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(0,0,15,.45);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+#snd{position:absolute;z-index:6;touch-action:none;top:calc(3% + env(safe-area-inset-top,0px));right:calc(3% + env(safe-area-inset-right,0px));width:clamp(36px,8vw,44px);height:clamp(36px,8vw,44px);border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(0,0,15,.45);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 #snd.off{border-color:rgba(255,90,90,.7);animation:sndpulse 1.1s infinite}
 #sndlbl{position:absolute;z-index:6;top:calc(3% + clamp(36px,8vw,44px) + env(safe-area-inset-top,0px) + 4px);right:calc(3% + env(safe-area-inset-right,0px));font:800 10px system-ui;color:#ffb0b0;background:rgba(0,0,15,.55);padding:2px 6px;border-radius:8px;white-space:nowrap;pointer-events:none}
 @keyframes sndpulse{0%,100%{box-shadow:0 0 0 rgba(255,90,90,.6)}50%{box-shadow:0 0 12px rgba(255,90,90,.8)}}
@@ -519,6 +519,8 @@ window.__ga=unlockAudio;let last=0;
 function loop(ts){const dt=Math.min(.033,(ts-last)/1000||0);last=ts;try{G.step(dt);G.render()}catch(e){console.error(e);for(let i=0;i<8;i++)c.restore()}requestAnimationFrame(loop)}
 addEventListener('resize',fit);fit();requestAnimationFrame(loop);
 ['pointerdown','touchstart','mousedown','keydown'].forEach(ev=>addEventListener(ev,unlockAudio,{passive:true}));
+let lastTouchEnd=0;
+addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<400)e.preventDefault();lastTouchEnd=now},{passive:false});
 const sndBtn=$('snd'),sndLbl=$('sndlbl');
 function sndSync(){const on=G.audio.a&&G.audio.a.state==='running'&&!G.audio.muted;sndBtn.textContent=on?'🔊':'🔇';sndBtn.classList.toggle('off',!on);sndLbl.style.display=on?'none':'block'}
 sndBtn.addEventListener('pointerdown',ev=>{ev.stopPropagation();ev.preventDefault();
